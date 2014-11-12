@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>PDF Form Builder</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link href="assets/css/lib/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/css/lib/bootstrap-responsive.min.css" rel="stylesheet">
+    <link href="assets/css/custom.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+
+
+	<script type="text/javascript" src="assets/js/markdown/Markdown.Converter.js"></script>
+	<script type="text/javascript" src="assets/js/markdown/Markdown.Sanitizer.js"></script>
+	<script type="text/javascript" src="assets/js/markdown/Markdown.Editor.js"></script>
+
+	<style>
+		#createButton {
+			width: 100%;
+			height: 40px;
+		}
+		#mainTitle {
+			float: none;
+			text-align: center;
+		}
+		#wmd-input{
+			min-height: 400px;
+			float: none;
+			width: 100%;
+		}
+.wmd-panel
+{
+	width: 50%;
+	min-width: 500px;
+}
+
+.wmd-button-bar 
+{
+	width: 100%;
+	background-color: Silver; 
+}
+
+.wmd-input 
+{ 
+	background-color: Gainsboro;
+	border: 1px solid DarkGray;
+}
+
+.wmd-preview 
+{ 
+}
+
+.wmd-button-row 
+{
+	position: relative; 
+	padding: 0px;  
+	height: 20px;
+}
+
+.wmd-spacer
+{
+	width: 1px; 
+	height: 20px; 
+	margin-left: 14px;
+	
+	position: absolute;
+	background-color: Silver;
+	display: inline-block; 
+	list-style: none;
+}
+
+.wmd-button {
+    width: 20px;
+    height: 20px;
+    padding-left: 2px;
+    padding-right: 3px;
+    position: absolute;
+    display: inline-block;
+    list-style: none;
+    cursor: pointer;
+}
+
+.wmd-button > span {
+    background-image: url(assets/img/wmd-buttons.png);
+    background-repeat: no-repeat;
+    background-position: 0px 0px;
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+}
+
+.wmd-spacer1
+{
+    left: 50px;
+}
+.wmd-spacer2
+{
+    left: 175px;
+}
+.wmd-spacer3
+{
+    left: 300px;
+}
+
+
+
+
+.wmd-prompt-background
+{
+	background-color: Black;
+}
+
+.wmd-prompt-dialog
+{
+	border: 1px solid #999999;
+	background-color: #F5F5F5;
+}
+
+.wmd-prompt-dialog > div {
+	font-size: 0.8em;
+	font-family: arial, helvetica, sans-serif;
+}
+
+
+.wmd-prompt-dialog > form > input[type="text"] {
+	border: 1px solid #999999;
+	color: black;
+}
+
+.wmd-prompt-dialog > form > input[type="button"]{
+	border: 1px solid #888888;
+	font-family: trebuchet MS, helvetica, sans-serif;
+	font-size: 0.8em;
+	font-weight: bold;
+}
+
+	</style>
+  </head>
+
+  <body>
+	  <!-- based on https://github.com/minikomi/Bootstrap-Form-Builder/ -->
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <span class="brand" id="mainTitle">Form Builder</span>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row clearfix">
+        <!-- Building Form. -->
+        <div class="span6">
+          <div class="clearfix">
+            <h2>Your Form</h2>
+            <hr>
+            <div id="build">
+              <form id="target" class="form-horizontal">
+              </form>
+            </div>
+          </div>
+        </div>
+        <!-- / Building Form. -->
+
+        <!-- Components -->
+        <div class="span6">
+          <h2>Drag & Drop components</h2>
+          <hr>
+          <div class="tabbable">
+            <ul class="nav nav-tabs" id="formtabs">
+              <!-- Tab nav -->
+            </ul>
+            <form class="form-horizontal" id="components">
+              <fieldset>
+                <div class="tab-content">
+                  <!-- Tabs of snippets go here -->
+                </div>
+              </fieldset>
+            </form>
+          </div>
+        </div>
+        <!-- / Components -->
+        <div class="span6">
+			<div class="clearfix">
+				<h2>The Markdown</h2>
+				<hr>
+				<div class="wmd-panel">
+            	<div id="wmd-button-bar"></div>
+
+					<textarea class="wmd-input" id="wmd-input">
+
+This is a *markdown* editor.
+------------------------------
+
+Just plain **Markdown**, except that the input is sanitized:
+
+Everything inside [name] will be replaced by what you filled in the form input with the name "name".
+
+anyone care for some __coffee__
+
+
+					</textarea>
+</div>
+			</div> <!-- clearfix -->
+		</div> <!-- span6 -->
+
+        <div class="span6">
+			<div class="clearfix">
+			<h2>The Output</h2>
+			<hr>
+			<div id="wmd-preview" class="wmd-panel wmd-preview"></div>
+			</div>
+		</div>
+
+      </div>
+	<div id="create amazing thing">
+		<button id="createButton" width="300px"  name="button1id" class="btn btn-success">Create Form</button>
+	</div>
+
+    </div> <!-- /container -->
+
+    <script data-main="assets/js/main-built.js" src="assets/js/lib/require.js" ></script>
+	<script>
+		function htmlDecode(input){
+			var e = document.createElement('div');
+			e.innerHTML = input;
+			return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+		}
+
+		var create_form_button = document.getElementById("createButton").addEventListener(
+				"click",
+				function () {
+					var form_render = document.getElementById("render");
+					var markdown    = document.getElementById("wmd-input");
+
+					var parsed_markdown = markdown.value.replace(/\n/g,"\\n").replace(/"/g,'\\"');
+					var whole_form      = form_render.value;
+					saveTextAsFile(parsed_markdown, whole_form);
+				},
+				false
+		);
+
+		function getTextToWrite(parsed_markdown, whole_form, name) {
+			var strVar="";
+			strVar += "\n <!DOCTYPE html>";
+			strVar += "\n <html lang=\"en\">";
+			strVar += "\n   <head>";
+			strVar += "\n     <meta charset=\"utf-8\">";
+			strVar += "\n     <title>[NAME]<\/title>";
+			strVar += "\n     <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">";
+			strVar += "\n     <meta name=\"description\" content=\"\">";
+			strVar += "\n     <meta name=\"author\" content=\"\">";
+			strVar += "\n ";
+			strVar += "\n     <link href=\"assets\/css\/lib\/bootstrap.min.css\" rel=\"stylesheet\">";
+			strVar += "\n     <link href=\"assets\/css\/lib\/bootstrap-responsive.min.css\" rel=\"stylesheet\">";
+			strVar += "\n     <link href=\"assets\/css\/custom.css\" rel=\"stylesheet\">";
+			strVar += "\n     <!--[if lt IE 9]>";
+			strVar += "\n     <script src=\"\/\/html5shim.googlecode.com\/svn\/trunk\/html5.js\"><\/script>";
+			strVar += "\n     <![endif]-->";
+			strVar += "\n ";
+			strVar += "\n     <link rel=\"shortcut icon\" href=\"images\/favicon.ico\">";
+			strVar += "\n     <link rel=\"apple-touch-icon\" href=\"images\/apple-touch-icon.png\">";
+			strVar += "\n     <link rel=\"apple-touch-icon\" sizes=\"72x72\" href=\"images\/apple-touch-icon-72x72.png\">";
+			strVar += "\n     <link rel=\"apple-touch-icon\" sizes=\"114x114\" href=\"images\/apple-touch-icon-114x114.png\">";
+			strVar += "\n ";
+			strVar += "\n         ";
+			strVar += "\n 	<script type=\"text\/javascript\" src=\"assets\/js\/markdown\/Markdown.Converter.js\"><\/script>";
+			strVar += "\n ";
+			strVar += "\n 	<script type=\"text\/javascript\" src=\"assets\/js\/jsPDF\/jspdf.js\"><\/script>";
+			strVar += "\n 	<script type=\"text\/javascript\" src=\"assets\/js\/jsPDF\/libs\/Deflate\/adler32cs.js\"><\/script>";
+			strVar += "\n 	<script type=\"text\/javascript\" src=\"assets\/js\/jsPDF\/libs\/FileSaver.js\/FileSaver.js\"><\/script>";
+			strVar += "\n 	<script type=\"text\/javascript\" src=\"assets\/js\/jsPDF\/libs\/Blob.js\/BlobBuilder.js\"><\/script>";
+			strVar += "\n ";
+			strVar += "\n 	<script type=\"text\/javascript\" src=\"assets\/js\/jsPDF\/jspdf.plugin.standard_fonts_metrics.js\"><\/script>";
+			strVar += "\n 	<script type=\"text\/javascript\" src=\"assets\/js\/jsPDF\/jspdf.plugin.split_text_to_size.js\"><\/script>";
+			strVar += "\n 	<script type=\"text\/javascript\" src=\"assets\/js\/jsPDF\/jspdf.plugin.from_html.js\"><\/script>";
+			strVar += "\n 	<script type=\"text\/javascript\" src=\"assets\/js\/jquery.min.js\"><\/script>";
+			strVar += "\n ";
+			strVar += "\n 	<style>";
+			strVar += "\n 		#createButton, #clearButton {";
+			strVar += "\n 			width: 49%;";
+			strVar += "\n 			height: 40px;";
+			strVar += "\n 		}";
+			strVar += "\n 		#mainTitle {";
+			strVar += "\n 			float: none;";
+			strVar += "\n 			text-align: center;";
+			strVar += "\n 		}";
+			strVar += "\n 		.fullwidth {";
+			strVar += "\n 			float: none;";
+			strVar += "\n 			width: 100%;";
+			strVar += "\n 		}";
+			strVar += "\n 		#invisible {";
+			strVar += "\n 			display: none;";
+			strVar += "\n 		}";
+			strVar += "\n 	<\/style>";
+			strVar += "\n   <\/head>";
+			strVar += "\n ";
+			strVar += "\n   <body>";
+			strVar += "\n     <div class=\"navbar navbar-fixed-top\">";
+			strVar += "\n       <div class=\"navbar-inner\">";
+			strVar += "\n         <div class=\"container\">";
+			strVar += "\n 			<span class=\"brand\" id=\"mainTitle\">[NAME]<\/span> <!-- HERE -->";
+			strVar += "\n         <\/div>";
+			strVar += "\n       <\/div>";
+			strVar += "\n     <\/div>";
+			strVar += "\n     <div class=\"container\">";
+			strVar += "\n       <div class=\"row clearfix\">";
+			strVar += "\n         <div class=\"span fullwidth\">";
+			strVar += "\n 			<div class=\"clearfix\"> <!-- HERE insert form -->";
+			strVar += "\n 				[FORM]";
+			strVar += "\n 			<\/div> <!-- end of insertion -->";
+			strVar += "\n         <\/div>";
+			strVar += "\n       <\/div>";
+			strVar += "\n 	<div id=\"create amazing thing\">";
+			strVar += "\n 		<button id=\"createButton\" width=\"300px\"  name=\"button1id\" class=\"btn btn-success\">Create PDF<\/button>";
+			strVar += "\n 		<button id=\"clearButton\" width=\"300px\"  name=\"buttonclearid\" class=\"btn btn-danger\">Clear Form<\/button>";
+			strVar += "\n ";
+			strVar += "\n 	<!-- HERE add a hook to create the pdf -->";
+			strVar += "\n 	<\/div>";
+			strVar += "\n ";
+			strVar += "\n     <\/div> <!-- \/container -->";
+			strVar += "\n 	<div id=\"invisible\"><\/div>";
+			strVar += "\n ";
+			strVar += "\n ";
+			strVar += "\n     <script data-main=\"assets\/js\/main-built.js\" src=\"assets\/js\/lib\/require.js\" ><\/script>";
+			strVar += "\n 	<script>";
+			strVar += "\n 		function htmlDecode(input){";
+			strVar += "\n 			var e = document.createElement('div');";
+			strVar += "\n 			e.innerHTML = input;";
+			strVar += "\n 			return e.childNodes.length === 0 ? \"\" : e.childNodes[0].nodeValue;";
+			strVar += "\n 		};";
+			strVar += "\n ";
+			strVar += "\n 		var converter = new Markdown.Converter();";
+			strVar += "\n 		\/\/ HERE add the markdown";
+			strVar += "\n 		var my_specific_markdown = \"[MARKDOWN]\";";
+			strVar += "\n 		var markdown_input = document.getElementById(\"wmd-input\"); ";
+			strVar += "\n ";
+			strVar += "\n 		var clear_form_button = document.getElementById(\"clearButton\").addEventListener(";
+			strVar += "\n 				\"click\",";
+			strVar += "\n 				function() {";
+			strVar += "\n 					document.querySelector(\".form-horizontal\").reset();";
+			strVar += "\n 				},";
+			strVar += "\n 				false";
+			strVar += "\n 		);";
+			strVar += "\n ";
+			strVar += "\n 		var serializeObject = function(b) {";
+			strVar += "\n 			var o = {};";
+			strVar += "\n 			a = b.serializeArray();";
+			strVar += "\n 			$.each(a, function() {";
+			strVar += "\n 				if (this.name != \"\") {";
+			strVar += "\n 					if (o[this.name]) {";
+			strVar += "\n 						if (!o[this.name].push) {";
+			strVar += "\n 							o[this.name] = [o[this.name]];";
+			strVar += "\n 						}";
+			strVar += "\n 						o[this.name].push(this.value || '');";
+			strVar += "\n 					} else {";
+			strVar += "\n 						o[this.name] = this.value || '';";
+			strVar += "\n 					}";
+			strVar += "\n 				}";
+			strVar += "\n 			});";
+			strVar += "\n 			return o;";
+			strVar += "\n 		};";
+			strVar += "\n ";
+			strVar += "\n 		var create_form_button = document.getElementById(\"createButton\").addEventListener(";
+			strVar += "\n 				\"click\", ";
+			strVar += "\n 				function () {";
+			strVar += "\n 					console.log(\"should create the pdf!\");";
+			strVar += "\n 					var temp_markdown = my_specific_markdown;";
+			strVar += "\n 					var form          = $(\".form-horizontal\");";
+			strVar += "\n 					var p             = serializeObject(form); ";
+			strVar += "\n ";
+			strVar += "\n 					for (var key in p) {";
+			strVar += "\n 						if (key!=undefined  && p[key] != undefined) {";
+			strVar += "\n ";
+			strVar += "\n 							var to_replace    = \"\\\\[\"+unescape(encodeURIComponent(key))+\"\\\\]\";";
+			strVar += "\n ";
+			strVar += "\n 							var the_value     = p[key]; ";
+			strVar += "\n 							if (p[key].constructor.toString().indexOf(\"Array\") != -1) {";
+			strVar += "\n 								the_value = \"\";";
+			strVar += "\n 								for (var i in p[key]) {";
+			strVar += "\n 									the_value += p[key][i]+ \" \";";
+			strVar += "\n 								}";
+			strVar += "\n 							}";
+			strVar += "\n 							var by            = unescape(htmlDecode(encodeURIComponent(the_value)));";
+			strVar += "\n 							var re            = new RegExp(to_replace,\"g\");";
+			strVar += "\n 							temp_markdown = temp_markdown.replace(re, by);";
+			strVar += "\n 						}";
+			strVar += "\n 					}";
+			strVar += "\n ";
+			strVar += "\n 					var html_output = converter.makeHtml(temp_markdown);";
+			strVar += "\n 					document.getElementById(\"invisible\").innerHTML =  html_output;";
+			strVar += "\n 					\/\/PDF output";
+			strVar += "\n 					var pdf = new jsPDF('p','in','letter');";
+			strVar += "\n 					var specialElementHandlers = {";
+			strVar += "\n 						'#bypassme': function(element, renderer){";
+			strVar += "\n 							return true";
+			strVar += "\n 						}";
+			strVar += "\n 					};";
+			strVar += "\n ";
+			strVar += "\n 					pdf.fromHTML(";
+			strVar += "\n 						document.getElementById(\"invisible\") \/\/ HTML string or DOM elem ref.";
+			strVar += "\n 						, 0.5 \/\/ x coord";
+			strVar += "\n 						, 0.5 \/\/ y coord";
+			strVar += "\n 						, {";
+			strVar += "\n 							'width':7.5 \/\/ max width of content on PDF";
+			strVar += "\n 							, 'elementHandlers': specialElementHandlers";
+			strVar += "\n 						}";
+			strVar += "\n 					);";
+			strVar += "\n ";
+			strVar += "\n 					pdf.save('Test.pdf');";
+			strVar += "\n ";
+			strVar += "\n 				}, ";
+			strVar += "\n 				false";
+			strVar += "\n 		);";
+			strVar += "\n ";
+			strVar += "\n ";
+			strVar += "\n 	<\/script>";
+			strVar += "\n   <\/body>";
+			strVar += "\n <\/html>";
+			strVar += "\n ";
+
+		    var output = strVar.replace(/\[NAME\]/g,name ).replace("[FORM]",whole_form).replace("[MARKDOWN]",parsed_markdown);
+		    return output;
+		}
+
+		function saveTextAsFile(parsed_markdown, whole_form)
+		{
+			var fileNameToSaveAs = document.querySelector("legend").innerHTML;//Form name;
+			var textToWrite = getTextToWrite(parsed_markdown, whole_form, fileNameToSaveAs);
+
+			var textFileAsBlob = new Blob([textToWrite], {type:'text/html'});
+
+			var downloadLink = document.createElement("a");
+			downloadLink.download = fileNameToSaveAs+".html";
+			downloadLink.innerHTML = "Download File";
+			if (window.webkitURL != null)
+			{
+				// Chrome allows the link to be clicked
+				// without actually adding it to the DOM.
+				downloadLink.href = window.webkitURL.createObjectURL(textFileAsBlob);
+			}
+			else
+			{
+				// Firefox requires the link to be added to the DOM
+				// before it can be clicked.
+				downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
+				downloadLink.onclick = destroyClickedElement;
+				downloadLink.style.display = "none";
+				document.body.appendChild(downloadLink);
+			}
+
+			downloadLink.click();
+		}
+
+		function destroyClickedElement(event)
+		{
+			document.body.removeChild(event.target);
+		}
+
+		(function () {
+			var converter1 = Markdown.getSanitizingConverter();
+
+			converter1.hooks.chain("preBlockGamut", function (text, rbg) {
+				return text.replace(/^ {0,3}""" *\n((?:.*?\n)+?) {0,3}""" *$/gm, function (whole, inner) {
+					return "<blockquote>" + rbg(inner) + "</blockquote>\n";
+				});
+			});
+
+			var editor1 = new Markdown.Editor(converter1);
+
+			editor1.run();
+
+		})();
+
+	</script>
+  </body>
+</html>
